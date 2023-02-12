@@ -7,6 +7,7 @@
 #include <chrono>
 using namespace std;
 
+//Создаём класс элементов дерева
 class Node
 {
 public:
@@ -19,8 +20,10 @@ public:
 	}
 };
 
+//Создаём корень
 Node *root;
 
+//Создаём пустое дерево козла отпущения
 class ScapeGoatTree
 {
 public:
@@ -31,6 +34,7 @@ public:
 		q = 0;
 	}
 
+  //Создаём функцию для нахождения высоты дерева
 	int size(Node *node)
 	{
 		if (node == NULL)
@@ -43,14 +47,15 @@ public:
 		return (int)(log(q) / log(1.5));
 	}
 
+//Операция поиска элемента в дереве. Стандартный. Пока не нашли значение обходим дерево от левого поддерева
 	bool Search(Node *r, float val)
 	{
 		while (r != NULL)
 		{
-			int rval = r->value;
-			if (val < rval)
+			int r_val = r->value;
+			if (val < r_val)
 				r = r->left_child;
-			else if (val > rval)
+			else if (val > r_val)
 				r = r->right_child;
 			else
 				return true;
@@ -58,9 +63,9 @@ public:
 		return false;
 	}
 
+//Операция вставки элемента в дерево. Если коэффициент несбалансированности отходит от нормы, то вызываем функцию перебалансировки дерева.
 	bool Insert(float x)
 	{
-
 		Node *node = new Node(x);
 		int d = AddWithDepth(node);
 		if (d > log32(q))
@@ -68,10 +73,9 @@ public:
 			Node *p = node->parent;
 			while (3 * size(p) <= 2 * size(p->parent))
 				p = p->parent;
-
+      
 			RebuildTree(p->parent);
 		}
-
 		return d >= 0;
 	}
 
@@ -86,6 +90,7 @@ public:
 		return MakeArrOfPointers(ptr->right_child, i);
 	}
 
+//Функция перебалансировки. 
 	void RebuildTree(Node *u)
 	{
 		int n = size(u);
@@ -109,6 +114,7 @@ public:
 		}
 	}
 
+//Строим сбалансированное дерево из массива
 	Node * buildBalancedTree(int i, int n)
 	{
 		if (n == 0)
@@ -120,8 +126,7 @@ public:
 		if (arr[i + m]->left_child != NULL)
 			arr[i + m]->left_child->parent = arr[i + m];
 
-		arr[i + m]->right_child =
-			buildBalancedTree(i + m + 1, n - m - 1);
+		arr[i + m]->right_child = buildBalancedTree(i + m + 1, n - m - 1);
 		if (arr[i + m]->right_child != NULL)
 			arr[i + m]->right_child->parent = arr[i + m];
 
@@ -138,6 +143,7 @@ public:
 			q++;
 			return 0;
 		}
+    
 		bool done = false;
 		int d = 0;
 		do
@@ -174,6 +180,7 @@ public:
 		return d;
 	}
 
+//Прямой обход
   void Pre_order(Node *r)
 	{
 		if (r != NULL)
@@ -184,6 +191,7 @@ public:
 		}
 	}
 
+//Поуровневый обход
 		void Level_order(Node *r)
 	{
 		if (!r)
@@ -210,6 +218,7 @@ public:
 		}
 	}
 
+//Симметричный обход
 	Node *InorderPred(Node *r)
 	{
 		r = r->left_child;
@@ -220,6 +229,7 @@ public:
 		return r;
 	}
 
+//Удаление дерева
 	Node* DeleteBST(Node *r, float key)
 	{
 		if (!r)
@@ -251,6 +261,7 @@ public:
 		return r;
 	}
 
+//Функция удаления элемента
 	void DeleteNode(Node *r, float key)
 	{
 		if (Search(r, key))
@@ -269,6 +280,7 @@ public:
 	}
 };
 
+//Список доступных операций
 enum interface
 {
 	Interface,
@@ -279,6 +291,7 @@ enum interface
 	End,
 };
 
+//Вывод списка операций
 void PrintInterface()
 {
 	cout << "\nScapeGoat Tree Операции\n";
@@ -290,6 +303,7 @@ void PrintInterface()
 	cout << interface::End << ". Завершить программу" << endl;
 }
 
+//Вывод дерева
 void DisplayTree(ScapeGoatTree &sgt)
 {
 	cout << "\nПрямой обход : ";
